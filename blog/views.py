@@ -242,3 +242,23 @@ def dashboard(request):
     'blogs': blogs
     }
     return render(request, 'dashboard/dashboard.html', context)
+
+
+def dlogin(request):
+    if request.method=='POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = auth.authenticate(username=username, password=password)
+        if user is not None:
+            auth.login(request, user)
+            return redirect('/dashboard')
+        else:
+            messages.info(request,"Invalid username/password")
+            return redirect('/dashboard/login')
+    else:
+        return render(request,"dashboard/login.html")
+
+@login_required
+def dlogout(request):
+    auth.logout(request)
+    return redirect('/dashboard/login')

@@ -20,6 +20,8 @@ urlpatterns =[
     path('blogs', views.blogs, name='blogs'),
 
     path('dashboard', views.dashboard, name='dashboard'),
+    path('dashboard/login', views.dlogin, name='dlogin'),
+    path('dashboard/logout', views.dlogout, name='dlogout'),
     path('dashboard/blogs', views.dblogs, name='dblogs'),
     path('dashboard/blog/<int:id>', views.dblog, name='dblog'),
     path('dashboard/addblog', views.addblog, name='addblog'),

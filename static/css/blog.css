@@ -52,6 +52,8 @@ a:hover {
 .navbar {
     background-color: slategrey;
     height: 60px;
+    width: 100% !important;
+    z-index: 9;
 }
 .logo-img {
     height: 60px;
@@ -94,4 +96,27 @@ a:hover {
 
 .pro-head {
     padding-bottom: 30px !important;
+}
+
+/* - - - - - - - - - - - - - - - - - - - Dashboard css - - - - - - - - - - - - - - - - - - - - - -  */
+
+.dnavbar {
+    height: 45px;
+}
+
+.sidebar {
+    width: 177px !important;
+}
+
+.widget {
+    margin-top: 10px;
+    border-radius: 10px;
+}
+
+.d-menu {
+    padding-bottom: 5px;
+}
+
+.d-area {
+    min-height: 97vh;
 }
