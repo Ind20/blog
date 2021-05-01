@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<title>{{blg.title}}</title>
+<div class="container pt-3 pb-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item"><a href="#">Blogs</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{blg.title|truncatechars:25}}</li>
+        </ol>
+    </nav>
+    {% if uid == b_user %}
+    <a href="/editblog/{{blg.id}}" class="btn submit-btn btn-info btn-md">Edit Blog</a>
+    {% endif %}
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>{{blg.title}}</h3>
+            <img class="dp" src="{{blg.user.userprofile.get_profile_pic}}" width="40" height="40"><span><strong>
+                    {{blg.user.first_name}}</span></strong><span><strong> {{blg.user.last_name}}</span></strong></a>
+            <p><span><i class="fa fa-calendar" aria-hidden="true"></i></span> {{blg.date_created}}</p>
+            <img class="" src="{{blg.image.url}}" width="100%" height="400">
+            <p class="b-des">{{blg.description|safe}}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -11,6 +11,7 @@ To run project follow these steps-
 - $virtualenv venv, $source venv/bin/activate (use 'work on venv' if on windows)
 - $ python -m pip install Django
 - $ pip install pillow
+- $ pip install django-ckeditor
 - $ install and configure mysql pkg if not using sqlite
 - $ python manage.py makemigrations
 - $ python manage.py migrate 

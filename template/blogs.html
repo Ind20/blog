@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<title>Blogs</title>
+<div class="container pt-3 pb-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Blogs</li>
+        </ol>
+    </nav>
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table mr-1"></i>
+            Blogs
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr class="d-flex">
+                            <th class="col-1">ID</th>
+                            <th class="col-1">Image</th>
+                            <th class="col-7">Title</th>
+                            <th class="col-2">Status</th>
+                            <th class="col-1">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for blog in blogs %}
+                        <tr class="d-flex">
+                            <td class="col-1">{{blog.id}}</td>
+                            <td class="col-1"><img class="" src="{{blog.image.url}}" width="40" height="40"></td>
+                            <td class="col-7">{{blog.title}}</td>
+                            <td class="col-2">{% if blog.status == 1 %}<span class="bg-warning p-1">Pending</span>{%elif blog.status == 2 %}<span class="bg-success p-1">Published</span>{% else %}<span class="bg-danger p-1">Unpublished</span>{% endif %}
+                            <td class="col-1"><a href="/blog/{{blog.id}}" class="btn btn-info btn-md">Details</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

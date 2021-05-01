@@ -1,0 +1,57 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+<title>{{blg.title}}</title>
+{%for message in messages%}
+<div class="message alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{ message}}</strong>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{%endfor%}
+<div class="container pt-3 pb-3">
+    <div class="row">
+        {% if blg.status == 1 %}
+        <div class="col-9"><p>Status: <span class="bg-warning p-1">Pending</span></p></div>
+        <div class="col-1">
+            <form action="/publishb/{{blg.id}}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn-right btn btn-success">Publish</button>
+            </form>
+        </div>
+        {% elif blg.status == 2 %}
+        <div class="col-9"><p>Status: <span class="bg-success p-1">Published</span></p></div>
+        <div class="col-1"><form action="/unpublishb/{{blg.id}}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-right btn btn-danger">Unublish</button>
+        </form></div>
+        {% else %}
+        <div class="col-9"><p>Status: <span class="bg-danger p-1">Unpublished</span></p></div>
+        <div class="col-1"><form action="/publishb/{{blg.id}}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn-right btn btn-success">Publish</button>
+        </form></div>
+        {% endif %}
+        <div class="col-1">
+            {% csrf_token %}
+            <a type="submit" class="btn-right btn btn-warning" href="/dashboard/editblog/{{blg.id}}">Edit</a>
+        </div>
+        <div class="col-1">
+            {% csrf_token %}
+            <form action="/deleteb/{{blg.id}}">
+                <button type="submit" class="btn-right btn btn-danger" onclick="return confirm('Permanently Delete this blog?')">Delete</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>{{blg.title}}</h3>
+            <img class="dp" src="{{blg.user.userprofile.get_profile_pic}}" width="40" height="40"><span><strong>
+                    {{blg.user.first_name}}</span></strong><span><strong> {{blg.user.last_name}}</span></strong></a>
+            <p><span><i class="fa fa-calendar" aria-hidden="true"></i></span> {{blg.date_created}}</p>
+            <img class="" src="{{blg.image.url}}" width="100%" height="400">
+            <p class="b-des">{{blg.description|safe}}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

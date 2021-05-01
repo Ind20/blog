@@ -3,8 +3,10 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.models import User, auth
 from django.contrib.auth.decorators import login_required
-from .models import userProfile
-from .forms import contactusForm, userProfileForm, userUpdateForm, userProfileUpdateForm
+from .models import userProfile, blog
+from .forms import contactusForm, userProfileForm, userUpdateForm, userProfileUpdateForm, blogForm, blogEditForm
+from django.contrib.auth.decorators import user_passes_test
+
 
 
 def home(request):
@@ -110,3 +112,133 @@ def register(request):
             return redirect('register')
     else:
         return render(request,"register.html")
+
+
+@login_required
+def createblog(request):
+    form= blogForm(request.POST or None, request.FILES or None)
+    uid = request.user.id
+    if request.method=='POST':
+        if form.is_valid():
+           blog = form.save(commit=False)
+           blog.user = request.user
+           blog.save()
+        messages.info(request,'Blog submitted successfully, it will show after published by admin')
+        return redirect('/myblogs') 
+    else:
+        return render(request, 'createblog.html', {'form': form})
+
+
+
+@login_required
+def editblog(request, id):
+    userblog = blog.objects.get(id=id)
+    uid = request.user.id
+    b_user = userblog.user_id
+    if uid != b_user:
+        messages.info(request,'You do not have permisson to edit this item')
+        return redirect('/myblogs') 
+    else:
+        form= blogEditForm(request.POST or None, request.FILES or None, instance=userblog)
+        if request.method=='POST':
+            if form.is_valid():
+                form.save()
+            messages.info(request,'Blog edited successfully, it will show after published by admin')
+            return redirect('/myblogs') 
+        else:
+            return render(request, 'editblog.html', {'form': form, 'userblog': userblog})
+
+
+def blogs(request):
+    blogs = blog.objects.all()
+    return render(request,'blogs.html', {'blogs': blogs})
+
+
+def blog_detail(request, id):
+    blg = blog.objects.get(id=id)
+    uid = request.user.id
+    b_user = blg.user_id
+    context = {
+        'blg': blg,
+        'uid': uid,
+        'b_user': b_user
+    }
+    return render(request, 'blog.html', context)
+
+
+def myblogs(request):
+    blogs = blog.objects.filter(user_id=request.user.id)
+    return render(request,'myblogs.html', {'blogs': blogs})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def publishb(request, id):
+    bid = id
+    blg = blog.objects.get(id=id)
+    blg.status = 2
+    blg.save()
+    return redirect('/dashboard/blog/%s' %bid)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def unpublishb(request, id):
+    bid = id
+    blg = blog.objects.get(id=id)
+    blg.status = 0
+    blg.save()
+    return redirect('/dashboard/blog/%s' %bid)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def deleteb(request, id):
+    blg = blog.objects.get(id=id)
+    blg.delete()
+    return redirect('/dashboard/blogs')
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def dblogs(request):
+    blogs = blog.objects.all().order_by('-id')
+    return render(request,'dashboard/blogs.html', {'blogs': blogs})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def dblog(request, id):
+    blg = blog.objects.get(id=id)
+    return render(request, 'dashboard/blog.html', {'blg': blg})
+
+@user_passes_test(lambda u: u.is_superuser)
+def addblog(request):
+    form= blogForm(request.POST or None, request.FILES or None)
+    if request.method=='POST':
+        if form.is_valid():
+           blog = form.save(commit=False)
+           blog.user = request.user
+           blog.status = 2
+           blog.save()
+        messages.info(request,'Blog submitted successfully')
+        return redirect('/dashboard/blogs') 
+    else:
+        return render(request, 'dashboard/addblog.html', {'form': form})
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def deditblog(request, id):
+    blg = blog.objects.get(id=id)
+    bid = id
+    form= blogEditForm(request.POST or None, request.FILES or None, instance=blg)
+    if request.method=='POST':
+        if form.is_valid():
+            form.save()
+        messages.info(request,'Blog edited successfully')
+        return redirect('/dashboard/blog/%s' % bid) 
+    else:
+        return render(request, 'dashboard/editblog.html', {'form': form, 'blg': blg})
+
+@user_passes_test(lambda u: u.is_superuser)
+def dashboard(request):
+    blogs         = blog.objects.all().order_by('-id')[:5]
+    context = {
+    'blogs': blogs
+    }
+    return render(request, 'dashboard/dashboard.html', context)

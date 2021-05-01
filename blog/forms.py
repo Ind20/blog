@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import contactus, userProfile
+from .models import contactus, userProfile, blog
 
 
 class contactusForm(forms.ModelForm):
@@ -47,4 +47,29 @@ class userUpdateForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class' : 'form-control'}),
             'last_name': forms.TextInput(attrs={'class' : 'form-control'}),
             'email' : forms.EmailInput(attrs={'class' : 'form-control'})
+        }
+
+
+
+class blogForm(forms.ModelForm):
+    class Meta:
+        model   = blog
+        fields  = ['category', 'title', 'description', 'image']
+        widgets = {
+            'category': forms.TextInput(attrs={'class' : 'form-control'}),
+            'title': forms.TextInput(attrs={'class' : 'form-control'}),
+            'description': forms.Textarea(attrs={'class' : 'form-control'}),
+            'image': forms.FileInput(attrs={'style' : 'margin-top:15px'})
+        }
+
+
+class blogEditForm(forms.ModelForm):
+    class Meta:
+        model   = blog
+        fields  = ['category', 'title', 'description', 'image']
+        widgets = {
+            'category': forms.TextInput(attrs={'class' : 'form-control'}),
+            'title': forms.TextInput(attrs={'class' : 'form-control'}),
+            'description': forms.Textarea(attrs={'class' : 'form-control'}),
+            'image': forms.FileInput(attrs={'style' : 'margin-top:15px'})
         }
