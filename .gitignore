@@ -1,0 +1,8 @@
+db.sqlite3
+.vscode/settings.json
+__init__.py
+__pycache__
+migrations
+images/
+.idea
+venv
