@@ -1,5 +1,5 @@
-# tutor
-tutor registration and test project
+# blog
+blog project
 
 To run project follow these steps-
 
